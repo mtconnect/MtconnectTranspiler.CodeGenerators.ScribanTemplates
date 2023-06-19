@@ -11,7 +11,7 @@ using System.Threading;
 
 namespace MtconnectTranspiler.Sinks.ScribanTemplates
 {
-    public abstract class ScribanTranspiler
+    public abstract class ScribanTranspiler : ITranspilerSink
     {
         /// <inheritdoc cref="ILogger"/>
         protected ILogger<ITranspilerSink> _logger;
