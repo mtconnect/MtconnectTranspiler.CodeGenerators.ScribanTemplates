@@ -13,7 +13,7 @@ namespace MtconnectTranspiler.Sinks.ScribanTemplates
         /// <summary>
         /// An internal collection of Regex-based interpreters.
         /// </summary>
-        private readonly Dictionary<Regex, Func<string, string>> interpreters = new Dictionary<Regex, Func<string, string>>();
+        protected readonly Dictionary<Regex, Func<string, string>> interpreters = new Dictionary<Regex, Func<string, string>>();
 
         /// <summary>
         /// Constructs a new instance of a Markdown interpreter
@@ -21,7 +21,7 @@ namespace MtconnectTranspiler.Sinks.ScribanTemplates
         public MarkdownInterpreter() { }
 
         /// <summary>
-        /// Adds a new interpreter for string processing.
+        /// Adds a new interpreter for string processing. Note: The default string replacement processes <c>block</c> and <c>contents</c> groupings by replacing instances of <c>block</c> with <c>contents</c>.
         /// </summary>
         /// <param name="regex">The regex used to determine if this interpreter applies to the input string.</param>
         /// <param name="interpreter">A function that will translate the input text into the expected format.</param>
@@ -42,7 +42,7 @@ namespace MtconnectTranspiler.Sinks.ScribanTemplates
         /// </summary>
         /// <param name="input">The markdown from the XMI comments.</param>
         /// <returns>Interpreted string</returns>
-        public string Interpret(string input)
+        public virtual string Interpret(string input)
         {
             StringBuilder output = new StringBuilder(input);
             foreach (var interpreter in interpreters)
@@ -52,7 +52,7 @@ namespace MtconnectTranspiler.Sinks.ScribanTemplates
                 foreach (Match match in matches)
                 {
                     string block = match.Groups["block"].Value;
-                    string contents = match.Groups["content"].Value;
+                    string contents = match.Groups["contents"].Value;
                     output = output.Replace(block, contents);
                 }
             }
