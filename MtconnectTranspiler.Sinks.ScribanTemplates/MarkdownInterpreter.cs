@@ -52,7 +52,7 @@ namespace MtconnectTranspiler.Sinks.ScribanTemplates
                 foreach (Match match in matches)
                 {
                     string block = match.Groups["block"].Value;
-                    string contents = match.Groups["contents"].Value;
+                    string contents = interpreter.Value(match.Groups["contents"].Value);
                     output = output.Replace(block, contents);
                 }
             }

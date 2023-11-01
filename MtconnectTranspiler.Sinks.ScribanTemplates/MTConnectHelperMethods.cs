@@ -42,7 +42,8 @@ namespace MtconnectTranspiler.Sinks.ScribanTemplates
             { "1.8", "MtconnectVersions.V_1_8_0" },
             { "2.0", "MtconnectVersions.V_2_0_0" },
             { "2.1", "MtconnectVersions.V_2_1_0" },
-            { "2.2", "MtconnectVersions.V_2_2_0" }
+            { "2.2", "MtconnectVersions.V_2_2_0" },
+            { "2.3", "MtconnectVersions.V_2_3_0" }
         };
         /// <summary>
         /// References <see cref="VersionEnumLookup"/> to lookup an alternative to the version number referred to within the <see cref="XmiDocument"/>.
