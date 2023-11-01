@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
 	  <TargetFramework>netstandard2.0</TargetFramework>
@@ -19,8 +19,8 @@
 
   <ItemGroup>
     <PackageReference Include="CaseExtensions" Version="1.1.0" />
-    <PackageReference Include="MtconnectTranspiler" Version="1.0.7" />
-    <PackageReference Include="Scriban" Version="5.7.0" />
+    <PackageReference Include="MtconnectTranspiler" Version="1.0.8-prerelease" />
+    <PackageReference Include="Scriban" Version="5.9.0" />
   </ItemGroup>
 
 </Project>
