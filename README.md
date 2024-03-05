@@ -1,3 +1,5 @@
+[![Publish to NuGet.org](https://github.com/mtconnect/MtconnectTranspiler.Sinks.ScribanTemplates/actions/workflows/nuget-packages.yml/badge.svg)](https://github.com/mtconnect/MtconnectTranspiler.Sinks.ScribanTemplates/actions/workflows/nuget-packages.yml)
+
 # MtconnectTranspiler.Sinks.ScribanTemplates
 
 Welcome to the `MtconnectTranspiler.Sinks.ScribanTemplates` repository, an abstract sink implementation designed to facilitate file generation using the MtconnectTranspiler framework and the Scriban templating engine. This library serves as a foundation for developers looking to create custom `ITranspilerSink` implementations, leveraging the powerful Scriban syntax to generate files from the deserialized SysML model provided by the MtconnectTranspiler library.
