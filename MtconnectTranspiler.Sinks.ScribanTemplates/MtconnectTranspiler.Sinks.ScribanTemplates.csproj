@@ -19,8 +19,8 @@
 
   <ItemGroup>
     <PackageReference Include="CaseExtensions" Version="1.1.0" />
-    <PackageReference Include="MtconnectTranspiler" Version="1.0.8.2-prerelease" />
-    <PackageReference Include="Scriban" Version="5.9.0" />
+    <PackageReference Include="MtconnectTranspiler" Version="1.0.8.3-prerelease.1" />
+    <PackageReference Include="Scriban" Version="5.10.0" />
   </ItemGroup>
 
 </Project>
