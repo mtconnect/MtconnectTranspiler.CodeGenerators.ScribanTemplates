@@ -4,7 +4,7 @@
 	  <TargetFramework>netstandard2.0</TargetFramework>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	  <Title>MTConnect Transpiler Sink for Scriban Templates</Title>
-	  <Version>1.0.15.3-prerelease</Version>
+	  <Version>1.0.15.3-prerelease.2</Version>
 	  <Authors>mtconnect, tbm0115</Authors>
 	  <Company>MTConnect Institute; TAMS;</Company>
 	  <Description>An implementation of `ITranspilerSink` from the `MtconnectTranspiler` library. This libary makes it possible to transpile the MTConnect Standard SysML model into other formats with the help of Scriban templates.</Description>
