@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 
 namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 {
@@ -48,12 +47,12 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
         /// <summary>
         /// Reference to the template rendering context.
         /// </summary>
-        protected TemplateContext TemplateContext { get; set; }
+        public TemplateContext TemplateContext { get; set; }
 
         /// <summary>
         /// Reference to the core template rendering model.
         /// </summary>
-        protected ScriptObject Model { get; set; }
+        public ScriptObject Model { get; set; }
 
         /// <summary>
         /// Constructs a new instance of the transpiler that can transpile the model into files.
@@ -113,6 +112,22 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
         }
 
         /// <summary>
+        /// Sets a value to the <see cref="Model"/>.
+        /// </summary>
+        /// <param name="member">The member name used in Scriban templates.</param>
+        /// <param name="value">The value for the member.</param>
+        public void UpdateModel(string member, object value)
+        {
+            if (value == null)
+                return;
+            if (Model.Contains(member))
+            {
+                Model.Remove(member);
+            }
+            Model.SetValue(member, value, true);
+        }
+
+        /// <summary>
         /// Renders the <paramref name="template"/>.
         /// </summary>
         /// <param name="member">The member name used in the <paramref name="template"/> for the provided <paramref name="value"/>.</param>
@@ -122,11 +137,8 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
         protected string RenderTemplateWithModel(string member, object value, Template template)
         {
             if (value == null) return String.Empty;
-            if (Model.Contains(member))
-            {
-                Model.Remove(member);
-            }
-            Model.SetValue(member, value, true);
+            UpdateModel(member, value);
+
             string output = template.Render(TemplateContext);
 
             Model.Remove(member);

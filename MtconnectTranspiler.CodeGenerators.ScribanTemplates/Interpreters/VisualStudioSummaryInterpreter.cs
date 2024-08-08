@@ -1,4 +1,4 @@
-﻿namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
+﻿namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates.Interpreters
 {
     /// <summary>
     /// An interpreter class for translating the Markdown defined in the XMI document's "Comments" into <c>&lt;summary /&gt;</c> blocks used in Visual Studio.
@@ -21,7 +21,7 @@
             AddInterpreter(@"(.*?)(?<block>\{\{block\((?<contents>.*?)\)\}\})(.*?)", CrefInterpreter);
             AddInterpreter(@"(.*?)(?<block>\{\{url\((?<contents>.*?)\)\}\}(.*?))(.*?)", HrefInterpreter);
             AddInterpreter(@"(.*?)(?<block>\{\{def\((?<contents>.*?)\)\}\}(.*?))(.*?)", CrefInterpreter);
-            AddInterpreter(@"(.*?)(?<block>\{\{property\((?<contents>.*?)\)\}\}(.*?))(.*?)", (string s) =>
+            AddInterpreter(@"(.*?)(?<block>\{\{property\((?<contents>.*?)\)\}\}(.*?))(.*?)", (s) =>
             {
                 string[] parts = s.Split(',');
                 if (parts.Length > 1)
