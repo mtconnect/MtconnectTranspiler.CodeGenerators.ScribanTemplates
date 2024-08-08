@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MtconnectTranspiler.Sinks.ScribanTemplates
+namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 {
     /// <summary>
     /// Represents an object that is intended to directly convert into a file.

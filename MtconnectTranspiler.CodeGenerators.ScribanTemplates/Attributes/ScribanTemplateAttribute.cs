@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MtconnectTranspiler.Sinks.ScribanTemplates
+namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 {
     /// <summary>
     /// An attribute used to relate a <c>class</c> with a Scriban-formatted template contained in the "Templates" folder of the project.

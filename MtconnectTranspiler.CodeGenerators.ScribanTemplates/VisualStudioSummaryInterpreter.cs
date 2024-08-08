@@ -1,4 +1,4 @@
-﻿namespace MtconnectTranspiler.Sinks.ScribanTemplates
+﻿namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 {
     /// <summary>
     /// An interpreter class for translating the Markdown defined in the XMI document's "Comments" into <c>&lt;summary /&gt;</c> blocks used in Visual Studio.

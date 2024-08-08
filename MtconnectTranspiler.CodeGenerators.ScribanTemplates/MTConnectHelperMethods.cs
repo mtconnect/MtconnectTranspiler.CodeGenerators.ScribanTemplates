@@ -3,7 +3,7 @@ using MtconnectTranspiler.Xmi.Profile;
 using Scriban.Runtime;
 using System.Collections.Generic;
 
-namespace MtconnectTranspiler.Sinks.ScribanTemplates
+namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 {
     /// <summary>
     /// Helper methods related to processing MTConnect references.

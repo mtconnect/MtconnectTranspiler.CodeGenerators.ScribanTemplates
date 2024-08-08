@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace MtconnectTranspiler.Sinks.ScribanTemplates
+namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 {
     /// <summary>
     /// Used as the <see cref="ITemplateLoader"/>.

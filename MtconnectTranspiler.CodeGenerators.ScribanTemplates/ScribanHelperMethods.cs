@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace MtconnectTranspiler.Sinks.ScribanTemplates
+namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 {
     public partial class ScribanHelperMethods : ScriptObject
     {
