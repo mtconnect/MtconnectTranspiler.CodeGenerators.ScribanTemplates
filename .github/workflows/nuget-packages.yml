@@ -10,7 +10,7 @@ env:
   NUGET_REGISTRY: https://nuget.org/
   NUGET_NAMESPACE: mtconnect
   NUGET_API_KEY: ${{ secrets.NUGET_TOKEN }}
-  VS_PROJECT: MtconnectTranspiler.Sinks.ScribanTemplates
+  VS_PROJECT: MtconnectTranspiler.CodeGenerators.ScribanTemplates
 
 jobs:
   build:
