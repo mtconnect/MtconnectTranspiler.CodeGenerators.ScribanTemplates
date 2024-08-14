@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using MtconnectTranspiler.Xmi;
 using Scriban.Runtime;
 using Scriban;
 using System;
@@ -10,181 +9,112 @@ using System.Reflection;
 
 namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 {
-    /// <summary>
-    /// Generator using Scriban templates.
-    /// </summary>
-    public class ScribanTemplateGenerator
+    public class ScribanTemplateGenerator : IScribanTemplateGenerator
     {
-        /// <inheritdoc cref="ILogger"/>
-        protected ILogger<ScribanTemplateGenerator> _logger;
+        private readonly ILogger<ScribanTemplateGenerator> _logger;
+        private readonly ITemplateLoaderService _templateLoaderService;
 
-        /// <summary>
-        /// The root output directory for the transpiled code.
-        /// </summary>
-        public string ProjectPath { get; set; }
+        public string ProjectPath { get; }
 
-        private string _templatesPath { get; set; }
-        /// <summary>
-        /// Reference to the directory containing all Scriban template files.
-        /// </summary>
+        private string _templatesPath;
         public string TemplatesPath
         {
-            get
-            {
-                if (string.IsNullOrEmpty(_templatesPath))
-                {
-                    _templatesPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates");
-                }
-                return _templatesPath;
-            }
+            get => _templatesPath ?? (_templatesPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates"));
             set
             {
                 _templatesPath = value;
-                (TemplateContext.TemplateLoader as IncludeSharedTemplates).TemplatesPath = value;
+                _templateLoaderService.TemplatesPath = value;
             }
         }
 
-        /// <summary>
-        /// Reference to the template rendering context.
-        /// </summary>
-        public TemplateContext TemplateContext { get; set; }
+        public TemplateContext TemplateContext { get; }
+        public ScriptObject Model { get; private set; }
 
-        /// <summary>
-        /// Reference to the core template rendering model.
-        /// </summary>
-        public ScriptObject Model { get; set; }
-
-        /// <summary>
-        /// Constructs a new instance of the transpiler that can transpile the model into files.
-        /// </summary>
-        /// <param name="projectPath"><inheritdoc cref="ProjectPath" path="/summary"/></param>
-        /// <param name="logger"><inheritdoc cref="ILogger"/></param>
-        public ScribanTemplateGenerator(string projectPath, ILogger<ScribanTemplateGenerator> logger = default)
+        public ScribanTemplateGenerator(string projectPath, ITemplateLoaderService templateLoaderService, ILogger<ScribanTemplateGenerator> logger = null)
         {
             ProjectPath = projectPath;
             _logger = logger;
+            _templateLoaderService = templateLoaderService;
 
             TemplateContext = new TemplateContext
             {
-                TemplateLoader = new IncludeSharedTemplates()
+                TemplateLoader = templateLoaderService as ITemplateLoader
             };
 
+            InitializeHelpers();
+            InitializeModel();
+        }
+
+        private void InitializeHelpers()
+        {
             var helperFunctions = new ScribanHelperMethods();
             TemplateContext.PushGlobal(helperFunctions);
 
             var mtconnectFunctions = new MTConnectHelperMethods();
             TemplateContext.PushGlobal(mtconnectFunctions);
+        }
 
-
+        private void InitializeModel()
+        {
             Model = new ScriptObject();
-            Model.SetValue("version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(), true);
+            Model.SetValue("version", Assembly.GetExecutingAssembly().GetName().Version?.ToString(), true);
             TemplateContext.PushGlobal(Model);
         }
 
-        /// <summary>
-        /// An internal cache of <see cref="Template"/>s based on the source <c>.scriban</c> file location.
-        /// </summary>
-        protected Dictionary<string, Template> templateCache = new Dictionary<string, Template>();
-        /// <summary>
-        /// Retrieves a <see cref="Template"/> from a <c>.scriban</c> file at the given <paramref name="filepath"/>.
-        /// </summary>
-        /// <param name="filepath">Location of the <c>.scriban</c> file to parse a <see cref="Template"/>.</param>
-        /// <returns>Reference to the <see cref="Template"/> parsed from the given <c>.scriban</c> at the <paramref name="filepath"/>.</returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        protected Template GetTemplate(string filepath)
+        private readonly Dictionary<string, Template> _templateCache = new Dictionary<string, Template>();
+
+        protected Template GetTemplate(string templateName)
         {
-            if (templateCache.TryGetValue(filepath, out Template template)) return template;
+            if (_templateCache.TryGetValue(templateName, out Template template))
+                return template;
 
-            if (!File.Exists(filepath)) throw new FileNotFoundException("Could not find template file", filepath);
-
-            string templateContent = File.ReadAllText(filepath);
+            string templateContent = _templateLoaderService.Load(templateName);
             template = Template.Parse(templateContent);
 
             if (template != null)
             {
-                if (templateCache.ContainsKey(filepath)) return templateCache[filepath];
-                _logger?.LogInformation("Registering Template from file: {Filepath}", filepath);
-                templateCache.Add(filepath, template);
+                _logger?.LogInformation("Registering Template: {TemplateName}", templateName);
+                _templateCache[templateName] = template;
                 return template;
             }
 
-            throw new InvalidOperationException();
+            throw new InvalidOperationException($"Failed to parse template: {templateName}");
         }
 
-        /// <summary>
-        /// Sets a value to the <see cref="Model"/>.
-        /// </summary>
-        /// <param name="member">The member name used in Scriban templates.</param>
-        /// <param name="value">The value for the member.</param>
         public void UpdateModel(string member, object value)
         {
-            if (value == null)
-                return;
-            if (Model.Contains(member))
-            {
-                Model.Remove(member);
-            }
+            if (value == null) return;
             Model.SetValue(member, value, true);
         }
 
-        /// <summary>
-        /// Renders the <paramref name="template"/>.
-        /// </summary>
-        /// <param name="member">The member name used in the <paramref name="template"/> for the provided <paramref name="value"/>.</param>
-        /// <param name="value">The value for the provided <paramref name="member"/> reference.</param>
-        /// <param name="template">The <see cref="Template"/> to render.</param>
-        /// <returns>Rendered output.</returns>
         protected string RenderTemplateWithModel(string member, object value, Template template)
         {
-            if (value == null) return String.Empty;
+            if (value == null) return string.Empty;
+
             UpdateModel(member, value);
-
             string output = template.Render(TemplateContext);
-
             Model.Remove(member);
 
             return output;
         }
 
-        /// <summary>
-        /// Processes a collection of objects, decorated with the <see cref="ScribanTemplateAttribute"/>, into a file.
-        /// </summary>
-        /// <typeparam name="T">An implementation of <see cref="IFileSource"/>.</typeparam>
-        /// <param name="items">Collection of objects, decorated with <see cref="ScribanTemplateAttribute"/>.</param>
-        /// <param name="folderPath">Location to save the files.</param>
-        /// <param name="overwriteExisting">Flag for whether or not the output file should be overwritten</param>
         public void ProcessTemplate<T>(IEnumerable<T> items, string folderPath, bool overwriteExisting = false) where T : IFileSource
         {
-            if (items == null || items.Any() == false) return;
+            if (items == null || !items.Any()) return;
 
-            foreach (var item in items) ProcessTemplate(item, folderPath, overwriteExisting);
+            foreach (var item in items)
+                ProcessTemplate(item, folderPath, overwriteExisting);
         }
 
-        /// <summary>
-        /// Processes an object, decorated with the <see cref="ScribanTemplateAttribute"/>, into a file.
-        /// </summary>
-        /// <typeparam name="T">An implementation of <see cref="IFileSource"/>.</typeparam>
-        /// <param name="item">An object, decorated with <see cref="ScribanTemplateAttribute"/>.</param>
-        /// <param name="folderPath">Location to save the file.</param>
-        /// <param name="overwriteExisting">Flag for whether or not the output file should be overwritten</param>
-        /// <exception cref="NotImplementedException"></exception>
-        /// <exception cref="FileNotFoundException"></exception>
         public void ProcessTemplate<T>(T item, string folderPath, bool overwriteExisting = false) where T : IFileSource
         {
             if (item == null) return;
 
-            System.Type type = typeof(T);
+            var type = typeof(T);
+            var attr = type.GetCustomAttribute<ScribanTemplateAttribute>()
+                ?? throw new NotImplementedException($"The type {typeof(T).Name} must be decorated with the ScribanTemplateAttribute");
 
-            ScribanTemplateAttribute attr = type.GetCustomAttribute<ScribanTemplateAttribute>()
-                ?? throw new NotImplementedException("The type of " + typeof(T).Name + " must be decorated with the ScribanTemplateAttribute");
-
-            Template template = GetTemplate(Path.Combine(TemplatesPath, attr.Filename));
-            if (template == null)
-            {
-                var templateNotFound = new FileNotFoundException();
-                _logger?.LogError(templateNotFound, "Could not find template");
-                throw templateNotFound;
-            }
+            Template template = GetTemplate(attr.Filename);
 
             string filepath = Path.Combine(folderPath, item.Filename);
 
@@ -196,7 +126,7 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
             catch (Exception ex)
             {
                 _logger?.LogError(ex, "Failed to render file");
-                throw ex;
+                throw;
             }
 
             if (!string.IsNullOrEmpty(output))
@@ -208,7 +138,7 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
                 catch (Exception ex)
                 {
                     _logger?.LogError(ex, "Failed to write to file: {Filepath}", filepath);
-                    throw ex;
+                    throw;
                 }
             }
             else
@@ -216,6 +146,6 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
                 _logger?.LogWarning("Cannot write an empty file: {Filepath}", filepath);
             }
         }
-
     }
+
 }

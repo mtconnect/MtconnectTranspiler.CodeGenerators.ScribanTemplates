@@ -2,20 +2,47 @@
 using Scriban.Runtime;
 using Scriban;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
+using MtconnectTranspiler.CodeGenerators.ScribanTemplates.Formatters;
+using MtconnectTranspiler.Interpreters;
 
 namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 {
     /// <summary>
     /// Used as the <see cref="ITemplateLoader"/>.
     /// </summary>
-    public sealed class IncludeSharedTemplates : ITemplateLoader
+    public sealed class IncludeSharedTemplates : ITemplateLoaderService
     {
         /// <summary>
-        /// Reference to the directory containing all Scriban template files.
+        /// Reference to the directory containing all Scriban template files.<br/>
+        /// <b>Default:</b> <c>Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates")</c>; aka "Templates" in the root of the executable.
         /// </summary>
         public string TemplatesPath { get; set; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates");
+
+        /// <summary>
+        /// A collection of named <see cref="MarkdownInterpreter"/> implementations that can be used within the templates.
+        /// </summary>
+        public Dictionary<string, MarkdownInterpreter> MarkdownInterpreters { get; } = new Dictionary<string, MarkdownInterpreter>();
+
+        /// <summary>
+        /// A collection of named <see cref="CodeFormatter"/> implementations that can be used within the templates.
+        /// </summary>
+        public Dictionary<string, CodeFormatter> CodeFormatters { get; } = new Dictionary<string, CodeFormatter>();
+
+        /// <summary>
+        /// The assembly to search for embedded resources. For example, your Visual Studio project.<br/>
+        /// <b>Default: </b> <c>Assembly.GetExecutingAssembly()</c>
+        /// </summary>
+        public Assembly ResourceAssembly { get; set; } = Assembly.GetExecutingAssembly();
+
+        /// <summary>
+        /// The namespace within the assembly where the embedded resources are located. For example, the name of your Visual Studio project.<br/>
+        /// <b>Default: </b> <c>MtconnectTranspiler.CodeGenerators.ScribanTemplates.EmbeddedTemplates</c>
+        /// </summary>
+        public string ResourceNamespace { get; set; } = "MtconnectTranspiler.CodeGenerators.ScribanTemplates.EmbeddedTemplates";
 
         /// <inheritdoc />
         public string GetPath(TemplateContext context, SourceSpan callerSpan, string templateName)
@@ -25,24 +52,61 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 
         /// <inheritdoc />
         public string Load(TemplateContext context, SourceSpan callerSpan, string templatePath)
-        {
-            if (!File.Exists(templatePath)) templatePath = Path.Combine(TemplatesPath, templatePath);
-            if (!File.Exists(templatePath)) throw new FileNotFoundException("Could not find template file", templatePath);
+            => Load(templatePath);
 
-            var mtconnectFunctions = new MTConnectHelperMethods();
-            context.PushGlobal(mtconnectFunctions);
-            return File.ReadAllText(templatePath);
+        public string Load(string templatePath)
+        {
+            if (File.Exists(templatePath))
+            {
+                // Load template from file
+                return File.ReadAllText(templatePath);
+            }
+
+            // Attempt to load the template from embedded resources
+            string resourcePath = $"{ResourceNamespace}.{templatePath.Replace(Path.DirectorySeparatorChar, '.').Replace(Path.AltDirectorySeparatorChar, '.')}";
+            using (Stream stream = ResourceAssembly.GetManifestResourceStream(resourcePath))
+            {
+                if (stream != null)
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        return reader.ReadToEnd();
+                    }
+                }
+            }
+
+            throw new FileNotFoundException("Could not find template file or embedded resource", templatePath);
         }
 
         /// <inheritdoc />
         public async ValueTask<string> LoadAsync(TemplateContext context, SourceSpan callerSpan, string templatePath)
-        {
-            if (!File.Exists(templatePath)) templatePath = Path.Combine(TemplatesPath, templatePath);
-            if (!File.Exists(templatePath)) throw new FileNotFoundException("Could not find template file", templatePath);
+            => await Task.FromResult(Load(templatePath));
 
+        /// <summary>
+        /// Adds custom helper methods (MarkdownInterpreters, CodeFormatters, etc.) to the <see cref="TemplateContext"/>.
+        /// </summary>
+        /// <param name="context">The template context to which helpers will be added.</param>
+        private void AddHelpersToContext(TemplateContext context)
+        {
+            var scriptObject = new ScriptObject();
+
+            // Add MTConnectHelperMethods to the context
             var mtconnectFunctions = new MTConnectHelperMethods();
-            context.PushGlobal(mtconnectFunctions);
-            return await Task.FromResult(File.ReadAllText(templatePath));
+            scriptObject.Import(mtconnectFunctions);
+
+            // Add all registered MarkdownInterpreterWrappers to the context with their respective names
+            foreach (var kvp in MarkdownInterpreters)
+            {
+                scriptObject.Add(kvp.Key, kvp.Value);
+            }
+
+            // Add all registered CodeFormatterWrappers to the context with their respective names
+            foreach (var kvp in CodeFormatters)
+            {
+                scriptObject.Add(kvp.Key, kvp.Value);
+            }
+
+            context.PushGlobal(scriptObject);
         }
     }
 }

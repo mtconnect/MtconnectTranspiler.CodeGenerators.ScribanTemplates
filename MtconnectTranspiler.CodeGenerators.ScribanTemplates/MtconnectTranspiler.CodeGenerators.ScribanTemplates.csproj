@@ -4,7 +4,7 @@
 	  <TargetFramework>netstandard2.0</TargetFramework>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	  <Title>MTConnect Transpiler Code Generator for Scriban Templates</Title>
-	  <Version>2.3.0.0-prerelease.2</Version>
+	  <Version>2.4.0.0-prerelease.3</Version>
 	  <Authors>mtconnect, tbm0115</Authors>
 	  <Company>MTConnect Institute; TAMS;</Company>
 	  <Description>An implementation of `ITranspilerSink` from the `MtconnectTranspiler` library. This libary makes it possible to transpile the MTConnect Standard SysML model into other formats with the help of Scriban templates.</Description>
@@ -19,8 +19,11 @@
 
   <ItemGroup>
     <PackageReference Include="CaseExtensions" Version="1.1.0" />
-    <PackageReference Include="MtconnectTranspiler" Version="1.0.8.2-prerelease" />
-    <PackageReference Include="Scriban" Version="5.9.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+    <PackageReference Include="MtconnectTranspiler" Version="2.4.0-prerelease.1" />
+    <PackageReference Include="Scriban" Version="5.10.0" />
   </ItemGroup>
 
 </Project>
