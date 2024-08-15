@@ -26,26 +26,52 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
         {
             _interpreter = interpreter;
 
-            // Use reflection to import all public instance methods
-            foreach (var method in _interpreter.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance))
-            {
-                if (method.ReturnType == typeof(string))
-                {
-                    var parameters = method.GetParameters();
+            // Expose different Interpret methods with unique names in the script context
 
-                    // Create an array of Type representing the parameter types
-                    Type[] paramTypes = parameters.Select(p => p.ParameterType).ToArray();
+            /// <summary>
+            /// Interprets a string using the <see cref="MarkdownInterpreter.Interpret(string)"/> method.
+            /// </summary>
+            /// <remarks>
+            /// In Scriban templates, this method can be accessed as <c>interpret_string</c>.
+            /// </remarks>
+            this.Import("interpret_string", new Func<string, string>(_interpreter.Interpret));
 
-                    // Create the delegate type based on the method's parameter types
-                    Type delegateType = Expression.GetFuncType(paramTypes.Concat(new[] { typeof(string) }).ToArray());
+            /// <summary>
+            /// Interprets a single <see cref="OwnedComment"/> object using the <see cref="MarkdownInterpreter.Interpret(OwnedComment)"/> method.
+            /// </summary>
+            /// <remarks>
+            /// In Scriban templates, this method can be accessed as <c>interpret_comment</c>.
+            /// </remarks>
+            this.Import("interpret_comment", new Func<Xmi.OwnedComment, string>(_interpreter.Interpret));
 
-                    // Create a delegate for the method
-                    var del = Delegate.CreateDelegate(delegateType, _interpreter, method);
+            /// <summary>
+            /// Interprets an array of <see cref="OwnedComment"/> objects using the <see cref="MarkdownInterpreter.Interpret(OwnedComment[])"/> method.
+            /// </summary>
+            /// <remarks>
+            /// In Scriban templates, this method can be accessed as <c>interpret_comments_array</c>.
+            /// </remarks>
+            this.Import("interpret_comments_array", new Func<Xmi.OwnedComment[], string>(_interpreter.Interpret));
 
-                    // Import the method into the script object using the method's name
-                    this.Import(method.Name, del);
-                }
-            }
+            //// Use reflection to import all public instance methods
+            //foreach (var method in _interpreter.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance))
+            //{
+            //    if (method.ReturnType == typeof(string))
+            //    {
+            //        var parameters = method.GetParameters();
+
+            //        // Create an array of Type representing the parameter types
+            //        Type[] paramTypes = parameters.Select(p => p.ParameterType).ToArray();
+
+            //        // Create the delegate type based on the method's parameter types
+            //        Type delegateType = Expression.GetFuncType(paramTypes.Concat(new[] { typeof(string) }).ToArray());
+
+            //        // Create a delegate for the method
+            //        var del = Delegate.CreateDelegate(delegateType, _interpreter, method);
+
+            //        // Import the method into the script object using the method's name
+            //        this.Import(method.Name, del);
+            //    }
+            //}
         }
     }
 }
