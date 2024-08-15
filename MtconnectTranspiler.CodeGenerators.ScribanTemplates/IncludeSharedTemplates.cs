@@ -114,13 +114,13 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
             // Add all registered MarkdownInterpreterWrappers to the context with their respective names
             foreach (var kvp in MarkdownInterpreters)
             {
-                scriptObject.Add(kvp.Key, kvp.Value);
+                scriptObject.SetValue(kvp.Key, kvp.Value, true);
             }
 
             // Add all registered CodeFormatterWrappers to the context with their respective names
             foreach (var kvp in CodeFormatters)
             {
-                scriptObject.Add(kvp.Key, kvp.Value);
+                scriptObject.SetValue(kvp.Key, kvp.Value, true);
             }
 
             generator.TemplateContext.PushGlobal(scriptObject);
