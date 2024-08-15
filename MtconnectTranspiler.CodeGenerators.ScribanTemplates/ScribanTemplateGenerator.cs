@@ -10,13 +10,17 @@ using Microsoft.Extensions.Options;
 
 namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 {
+    /// <summary>
+    /// A service for generating files from <c>.scriban</c> templates.
+    /// </summary>
     public class ScribanTemplateGenerator : IScribanTemplateGenerator
     {
         private readonly ILogger<ScribanTemplateGenerator> _logger;
         private readonly ITemplateLoaderService _templateLoaderService;
         private readonly ScribanGeneratorOptions _options;
 
-        public string ProjectPath { get; }
+        /// <inheritdoc />
+        public string OutputPath { get; }
 
         private string _templatesPath;
         public string TemplatesPath
@@ -29,7 +33,9 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
             }
         }
 
+        /// <inheritdoc />
         public TemplateContext TemplateContext { get; }
+        /// <inheritdoc />
         public ScriptObject Model { get; private set; }
 
         public ScribanTemplateGenerator(ITemplateLoaderService templateLoaderService, IOptions<ScribanGeneratorOptions> options, ILogger<ScribanTemplateGenerator> logger = null)
@@ -38,7 +44,7 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
             _templateLoaderService = templateLoaderService;
             _options = options.Value;
 
-            ProjectPath = _options.ProjectPath;
+            OutputPath = _options.ProjectPath;
 
             TemplateContext = new TemplateContext
             {
@@ -85,6 +91,7 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
             throw new InvalidOperationException($"Failed to parse template: {templateName}");
         }
 
+        /// <inheritdoc />
         public void UpdateModel(string member, object value)
         {
             if (value == null) return;
@@ -102,6 +109,7 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
             return output;
         }
 
+        /// <inheritdoc />
         public void ProcessTemplate<T>(IEnumerable<T> items, string folderPath, bool overwriteExisting = false) where T : IFileSource
         {
             if (items == null || !items.Any()) return;
@@ -110,6 +118,7 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
                 ProcessTemplate(item, folderPath, overwriteExisting);
         }
 
+        /// <inheritdoc />
         public void ProcessTemplate<T>(T item, string folderPath, bool overwriteExisting = false) where T : IFileSource
         {
             if (item == null) return;
