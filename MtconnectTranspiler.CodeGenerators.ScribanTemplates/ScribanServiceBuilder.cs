@@ -23,6 +23,9 @@ namespace MtconnectTranspiler.Extensions
             var builder = new ScribanServiceBuilder(services);
             configure?.Invoke(builder);
 
+            // Add IScribanTemplateGenerator to the service collection
+            services.AddScoped<IScribanTemplateGenerator, ScribanTemplateGenerator>();
+
             return services;
         }
     }
