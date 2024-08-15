@@ -3,6 +3,8 @@ using MtconnectTranspiler.CodeGenerators.ScribanTemplates;
 using MtconnectTranspiler.CodeGenerators.ScribanTemplates.Formatters;
 using MtconnectTranspiler.Interpreters;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
+using Scriban.Runtime;
 
 namespace MtconnectTranspiler.Extensions
 {
@@ -22,7 +24,7 @@ namespace MtconnectTranspiler.Extensions
         public ITemplateLoaderServiceBuilder(IServiceCollection services)
         {
             _services = services;
-            _templateLoader = new IncludeSharedTemplates();
+            _templateLoader = new IncludeSharedTemplates(services.BuildServiceProvider().GetRequiredService<ILogger<ITemplateLoader>>());
         }
 
         /// <summary>
