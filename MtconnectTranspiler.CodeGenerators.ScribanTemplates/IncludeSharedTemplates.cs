@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using MtconnectTranspiler.CodeGenerators.ScribanTemplates.Formatters;
 using MtconnectTranspiler.Interpreters;
+using Microsoft.Extensions.Logging;
 
 namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 {
@@ -16,6 +17,8 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
     /// </summary>
     public sealed class IncludeSharedTemplates : ITemplateLoaderService
     {
+        private readonly ILogger<ITemplateLoader> _logger;
+
         /// <summary>
         /// Reference to the directory containing all Scriban template files.<br/>
         /// <b>Default:</b> <c>Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates")</c>; aka "Templates" in the root of the executable.
@@ -44,6 +47,11 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
         /// </summary>
         public string ResourceNamespace { get; set; } = "MtconnectTranspiler.CodeGenerators.ScribanTemplates.EmbeddedTemplates";
 
+        public IncludeSharedTemplates(ILogger<ITemplateLoader> logger)
+        {
+            _logger = logger;
+        }
+
         /// <inheritdoc />
         public string GetPath(TemplateContext context, SourceSpan callerSpan, string templateName)
         {
@@ -56,18 +64,22 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 
         public string Load(string templatePath)
         {
+            _logger?.LogDebug("Loading template from path {templatePath}", templatePath);
             if (File.Exists(templatePath))
             {
+                _logger?.LogDebug("Found template file.");
                 // Load template from file
                 return File.ReadAllText(templatePath);
             }
 
+            _logger?.LogDebug("Searching embedded resources for template.");
             // Attempt to load the template from embedded resources
             string resourcePath = $"{ResourceNamespace}.{templatePath.Replace(Path.DirectorySeparatorChar, '.').Replace(Path.AltDirectorySeparatorChar, '.')}";
             using (Stream stream = ResourceAssembly.GetManifestResourceStream(resourcePath))
             {
                 if (stream != null)
                 {
+                    _logger?.LogDebug("Found template resource.");
                     using (StreamReader reader = new StreamReader(stream))
                     {
                         return reader.ReadToEnd();
