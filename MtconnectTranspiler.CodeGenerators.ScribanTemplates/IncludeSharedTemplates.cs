@@ -108,13 +108,17 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
             // Add all registered MarkdownInterpreterWrappers to the context with their respective names
             foreach (var kvp in MarkdownInterpreters)
             {
-                generator.Model.SetValue(kvp.Key, kvp.Value, true);
+                var script = new ScriptObject();
+                script.Import(kvp.Value);
+                generator.Model.SetValue(kvp.Key, script, true);
             }
 
             // Add all registered CodeFormatterWrappers to the context with their respective names
             foreach (var kvp in CodeFormatters)
             {
-                generator.Model.SetValue(kvp.Key, kvp.Value, true);
+                var script = new ScriptObject();
+                script.Import(kvp.Value);
+                generator.Model.SetValue(kvp.Key, script, true);
             }
         }
     }
