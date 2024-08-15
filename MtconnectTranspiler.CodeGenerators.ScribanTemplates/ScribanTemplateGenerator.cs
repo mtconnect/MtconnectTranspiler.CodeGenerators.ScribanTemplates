@@ -62,6 +62,8 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 
             var mtconnectFunctions = new MTConnectHelperMethods();
             TemplateContext.PushGlobal(mtconnectFunctions);
+
+            _templateLoaderService.InitializeLoader(this);
         }
 
         private void InitializeModel()

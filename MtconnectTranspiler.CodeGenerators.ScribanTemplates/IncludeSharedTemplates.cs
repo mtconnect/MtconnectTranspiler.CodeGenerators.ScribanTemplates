@@ -103,7 +103,7 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
         /// Adds custom helper methods (MarkdownInterpreters, CodeFormatters, etc.) to the <see cref="TemplateContext"/>.
         /// </summary>
         /// <param name="context">The template context to which helpers will be added.</param>
-        private void AddHelpersToContext(TemplateContext context)
+        public void InitializeLoader(IScribanTemplateGenerator generator)
         {
             var scriptObject = new ScriptObject();
 
@@ -123,7 +123,7 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
                 scriptObject.Add(kvp.Key, kvp.Value);
             }
 
-            context.PushGlobal(scriptObject);
+            generator.TemplateContext.PushGlobal(scriptObject);
         }
     }
 }
