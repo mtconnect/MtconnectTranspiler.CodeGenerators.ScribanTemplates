@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Options;
 
 namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 {
@@ -13,6 +14,7 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
     {
         private readonly ILogger<ScribanTemplateGenerator> _logger;
         private readonly ITemplateLoaderService _templateLoaderService;
+        private readonly ScribanGeneratorOptions _options;
 
         public string ProjectPath { get; }
 
@@ -30,11 +32,13 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
         public TemplateContext TemplateContext { get; }
         public ScriptObject Model { get; private set; }
 
-        public ScribanTemplateGenerator(string projectPath, ITemplateLoaderService templateLoaderService, ILogger<ScribanTemplateGenerator> logger = null)
+        public ScribanTemplateGenerator(ITemplateLoaderService templateLoaderService, IOptions<ScribanGeneratorOptions> options, ILogger<ScribanTemplateGenerator> logger = null)
         {
-            ProjectPath = projectPath;
             _logger = logger;
             _templateLoaderService = templateLoaderService;
+            _options = options.Value;
+
+            ProjectPath = _options.ProjectPath;
 
             TemplateContext = new TemplateContext
             {
@@ -147,5 +151,4 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
             }
         }
     }
-
 }

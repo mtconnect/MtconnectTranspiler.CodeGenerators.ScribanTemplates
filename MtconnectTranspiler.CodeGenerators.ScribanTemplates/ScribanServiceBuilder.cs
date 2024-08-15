@@ -62,11 +62,11 @@ namespace MtconnectTranspiler.Extensions
         /// <summary>
         /// Configures the Scriban template generator by applying the specified configuration action.
         /// </summary>
-        /// <param name="configure">An action to configure the Scriban template generator.</param>
+        /// <param name="configure">An action to configure the Scriban template generator with options.</param>
         /// <returns>The <see cref="ScribanServiceBuilder"/> for chaining method calls.</returns>
-        public ScribanServiceBuilder ConfigureGenerator(Action<ScribanTemplateGenerator> configure)
+        public ScribanServiceBuilder ConfigureGenerator(Action<ScribanGeneratorOptions> configure)
         {
-            _services.Configure<ScribanTemplateGenerator>(options => configure(options));
+            _services.Configure(configure);
             return this;
         }
 
