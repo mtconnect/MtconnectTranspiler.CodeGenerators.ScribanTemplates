@@ -102,7 +102,7 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
         /// <summary>
         /// Adds custom helper methods (MarkdownInterpreters, CodeFormatters, etc.) to the <see cref="TemplateContext"/>.
         /// </summary>
-        /// <param name="context">The template context to which helpers will be added.</param>
+        /// <param name="generator">The template context to which helpers will be added.</param>
         public void InitializeLoader(IScribanTemplateGenerator generator)
         {
             // Add all registered MarkdownInterpreterWrappers to the context with their respective names

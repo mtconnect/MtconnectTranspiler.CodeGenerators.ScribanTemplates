@@ -22,13 +22,12 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
         /// <inheritdoc />
         public string OutputPath { get; }
 
-        private string _templatesPath;
+        /// <inheritdoc cref="ITemplateLoaderService.TemplatesPath"/>
         public string TemplatesPath
         {
-            get => _templatesPath ?? (_templatesPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates"));
+            get => _templateLoaderService.TemplatesPath ?? (_templateLoaderService.TemplatesPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates"));
             set
             {
-                _templatesPath = value;
                 _templateLoaderService.TemplatesPath = value;
             }
         }

@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MtconnectTranspiler.CodeGenerators.ScribanTemplates;
-using MtconnectTranspiler.CodeGenerators.ScribanTemplates.Formatters;
-using MtconnectTranspiler.Interpreters;
 using System;
 
 namespace MtconnectTranspiler.Extensions
