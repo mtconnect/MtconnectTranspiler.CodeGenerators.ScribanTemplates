@@ -51,17 +51,17 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
                 TemplateLoader = templateLoaderService as ITemplateLoader
             };
 
-            InitializeHelpers();
             InitializeModel();
+            InitializeHelpers();
         }
 
         private void InitializeHelpers()
         {
             var helperFunctions = new ScribanHelperMethods();
-            TemplateContext.PushGlobal(helperFunctions);
+            Model.Import(helperFunctions);
 
             var mtconnectFunctions = new MTConnectHelperMethods();
-            TemplateContext.PushGlobal(mtconnectFunctions);
+            Model.Import(mtconnectFunctions);
 
             _templateLoaderService.InitializeLoader(this);
         }

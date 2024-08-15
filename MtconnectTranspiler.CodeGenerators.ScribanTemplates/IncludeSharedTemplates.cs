@@ -105,25 +105,17 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
         /// <param name="context">The template context to which helpers will be added.</param>
         public void InitializeLoader(IScribanTemplateGenerator generator)
         {
-            var scriptObject = new ScriptObject();
-
-            // Add MTConnectHelperMethods to the context
-            var mtconnectFunctions = new MTConnectHelperMethods();
-            scriptObject.Import(mtconnectFunctions);
-
             // Add all registered MarkdownInterpreterWrappers to the context with their respective names
             foreach (var kvp in MarkdownInterpreters)
             {
-                scriptObject.SetValue(kvp.Key, kvp.Value, true);
+                generator.Model.SetValue(kvp.Key, kvp.Value, true);
             }
 
             // Add all registered CodeFormatterWrappers to the context with their respective names
             foreach (var kvp in CodeFormatters)
             {
-                scriptObject.SetValue(kvp.Key, kvp.Value, true);
+                generator.Model.SetValue(kvp.Key, kvp.Value, true);
             }
-
-            generator.TemplateContext.PushGlobal(scriptObject);
         }
     }
 }
