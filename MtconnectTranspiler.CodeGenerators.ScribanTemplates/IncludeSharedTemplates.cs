@@ -65,6 +65,11 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
         public string Load(string templatePath)
         {
             _logger?.LogDebug("Loading template from path {templatePath}", templatePath);
+            if (!File.Exists(templatePath) && File.Exists(Path.Combine(TemplatesPath, templatePath)))
+            {
+                templatePath = Path.Combine(TemplatesPath, templatePath);
+            }
+
             if (File.Exists(templatePath))
             {
                 _logger?.LogDebug("Found template file.");
