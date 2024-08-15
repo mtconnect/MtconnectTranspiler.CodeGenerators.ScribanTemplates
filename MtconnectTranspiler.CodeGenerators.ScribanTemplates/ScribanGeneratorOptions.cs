@@ -8,6 +8,6 @@
         /// <summary>
         /// The output path for the generated files of the project.
         /// </summary>
-        public string ProjectPath { get; set; }
+        public string OutputPath { get; set; }
     }
 }

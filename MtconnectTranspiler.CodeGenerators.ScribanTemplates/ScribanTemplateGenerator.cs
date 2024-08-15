@@ -44,7 +44,7 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
             _templateLoaderService = templateLoaderService;
             _options = options.Value;
 
-            OutputPath = _options.ProjectPath;
+            OutputPath = _options.OutputPath;
 
             TemplateContext = new TemplateContext
             {
