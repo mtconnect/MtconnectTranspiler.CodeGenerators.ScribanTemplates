@@ -51,27 +51,6 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
             /// In Scriban templates, this method can be accessed as <c>interpret_comments_array</c>.
             /// </remarks>
             this.Import("interpret_comments_array", new Func<Xmi.OwnedComment[], string>(_interpreter.Interpret));
-
-            //// Use reflection to import all public instance methods
-            //foreach (var method in _interpreter.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance))
-            //{
-            //    if (method.ReturnType == typeof(string))
-            //    {
-            //        var parameters = method.GetParameters();
-
-            //        // Create an array of Type representing the parameter types
-            //        Type[] paramTypes = parameters.Select(p => p.ParameterType).ToArray();
-
-            //        // Create the delegate type based on the method's parameter types
-            //        Type delegateType = Expression.GetFuncType(paramTypes.Concat(new[] { typeof(string) }).ToArray());
-
-            //        // Create a delegate for the method
-            //        var del = Delegate.CreateDelegate(delegateType, _interpreter, method);
-
-            //        // Import the method into the script object using the method's name
-            //        this.Import(method.Name, del);
-            //    }
-            //}
         }
     }
 }

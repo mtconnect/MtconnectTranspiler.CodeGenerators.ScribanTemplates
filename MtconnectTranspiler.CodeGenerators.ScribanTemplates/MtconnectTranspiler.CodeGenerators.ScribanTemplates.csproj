@@ -22,7 +22,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
-    <PackageReference Include="MtconnectTranspiler" Version="2.4.0-prerelease.3" />
+    <PackageReference Include="MtconnectTranspiler" Version="2.4.0-prerelease.4" />
     <PackageReference Include="Scriban" Version="5.10.0" />
   </ItemGroup>
 
