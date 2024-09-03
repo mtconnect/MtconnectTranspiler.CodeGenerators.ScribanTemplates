@@ -47,6 +47,10 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
         /// </summary>
         public string ResourceNamespace { get; set; } = "MtconnectTranspiler.CodeGenerators.ScribanTemplates.EmbeddedTemplates";
 
+        /// <summary>
+        /// Constructs a new <see cref="IncludeSharedTemplates"/>
+        /// </summary>
+        /// <param name="logger"><inheritdoc cref="ILogger" path="/summary"/></param>
         public IncludeSharedTemplates(ILogger<ITemplateLoader> logger)
         {
             _logger = logger;
@@ -62,6 +66,7 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
         public string Load(TemplateContext context, SourceSpan callerSpan, string templatePath)
             => Load(templatePath);
 
+        /// <inheritdoc />
         public string Load(string templatePath)
         {
             _logger?.LogDebug("Loading template from path {templatePath}", templatePath);

@@ -8,6 +8,7 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates.Formatters
     /// </summary>
     public class RubyCodeFormatter : CodeFormatter
     {
+        /// <inheritdoc />
         protected override HashSet<char> InvalidCharacters => base.InvalidCharacters;
         // You can extend or override invalid characters specific to Ruby here if needed
 

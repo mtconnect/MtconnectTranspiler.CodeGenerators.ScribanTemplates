@@ -37,6 +37,12 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
         /// <inheritdoc />
         public ScriptObject Model { get; private set; }
 
+        /// <summary>
+        /// Constructs a new <see cref="ScribanTemplateGenerator"/>
+        /// </summary>
+        /// <param name="templateLoaderService"><inheritdoc cref="ITemplateLoaderService" path="/summary"/></param>
+        /// <param name="options"><inheritdoc cref="ScribanGeneratorOptions" path="/summary"/></param>
+        /// <param name="logger"><inheritdoc cref="ILogger" path="/summary"/></param>
         public ScribanTemplateGenerator(ITemplateLoaderService templateLoaderService, IOptions<ScribanGeneratorOptions> options, ILogger<ScribanTemplateGenerator> logger = null)
         {
             _logger = logger;
@@ -74,6 +80,12 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 
         private readonly Dictionary<string, Template> _templateCache = new Dictionary<string, Template>();
 
+        /// <summary>
+        /// Gets a .scriban file by name either from a filepath or from embedded resources.
+        /// </summary>
+        /// <param name="templateName">Name of the .scriban template file.</param>
+        /// <returns><inheritdoc cref="Template" path="/summary"/></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         protected Template GetTemplate(string templateName)
         {
             if (_templateCache.TryGetValue(templateName, out Template template))
@@ -99,6 +111,13 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
             Model.SetValue(member, value, true);
         }
 
+        /// <summary>
+        /// Renders the provided <paramref name="template"/> with a model <paramref name="value"/> applied to the <paramref name="member"/> name.
+        /// </summary>
+        /// <param name="member">Name of the accessible member in the .scriban template.</param>
+        /// <param name="value">Value for the accessible member in the .scriban template.</param>
+        /// <param name="template"><inheritdoc cref="Template" path="/summary"/></param>
+        /// <returns>Rendered template</returns>
         protected string RenderTemplateWithModel(string member, object value, Template template)
         {
             if (value == null) return string.Empty;

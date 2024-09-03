@@ -7,6 +7,9 @@ using System.Text.RegularExpressions;
 
 namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 {
+    /// <summary>
+    /// Collection of helper methods that can be used by the Scriban template engine.
+    /// </summary>
     public partial class ScribanHelperMethods : ScriptObject
     {
         /// <summary>

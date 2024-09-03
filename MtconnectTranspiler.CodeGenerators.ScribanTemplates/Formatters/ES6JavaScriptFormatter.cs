@@ -8,6 +8,7 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates.Formatters
     /// </summary>
     public class ES6JavaScriptFormatter : CodeFormatter
     {
+        /// <inheritdoc/>
         protected override HashSet<char> InvalidCharacters => base.InvalidCharacters;
         // You can extend or override invalid characters specific to ES6 JavaScript here if needed
 

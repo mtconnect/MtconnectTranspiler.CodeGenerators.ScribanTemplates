@@ -1,9 +1,6 @@
 ﻿using MtconnectTranspiler.Interpreters;
 using Scriban.Runtime;
 using System;
-using System.Linq.Expressions;
-using System.Linq;
-using System.Reflection;
 
 namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 {
@@ -28,28 +25,16 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 
             // Expose different Interpret methods with unique names in the script context
 
-            /// <summary>
-            /// Interprets a string using the <see cref="MarkdownInterpreter.Interpret(string)"/> method.
-            /// </summary>
-            /// <remarks>
-            /// In Scriban templates, this method can be accessed as <c>interpret_string</c>.
-            /// </remarks>
+            // Interprets a string using the <see cref="MarkdownInterpreter.Interpret(string)"/> method.
+            // In Scriban templates, this method can be accessed as <c>interpret_string</c>.
             this.Import("interpret_string", new Func<string, string>(_interpreter.Interpret));
 
-            /// <summary>
-            /// Interprets a single <see cref="OwnedComment"/> object using the <see cref="MarkdownInterpreter.Interpret(OwnedComment)"/> method.
-            /// </summary>
-            /// <remarks>
-            /// In Scriban templates, this method can be accessed as <c>interpret_comment</c>.
-            /// </remarks>
+            // Interprets a single <see cref="OwnedComment"/> object using the <see cref="MarkdownInterpreter.Interpret(OwnedComment)"/> method.
+            // In Scriban templates, this method can be accessed as <c>interpret_comment</c>.
             this.Import("interpret_comment", new Func<Xmi.OwnedComment, string>(_interpreter.Interpret));
 
-            /// <summary>
-            /// Interprets an array of <see cref="OwnedComment"/> objects using the <see cref="MarkdownInterpreter.Interpret(OwnedComment[])"/> method.
-            /// </summary>
-            /// <remarks>
-            /// In Scriban templates, this method can be accessed as <c>interpret_comments_array</c>.
-            /// </remarks>
+            // Interprets an array of <see cref="OwnedComment"/> objects using the <see cref="MarkdownInterpreter.Interpret(OwnedComment[])"/> method.
+            // In Scriban templates, this method can be accessed as <c>interpret_comments_array</c>.
             this.Import("interpret_comments_array", new Func<Xmi.OwnedComment[], string>(_interpreter.Interpret));
         }
     }

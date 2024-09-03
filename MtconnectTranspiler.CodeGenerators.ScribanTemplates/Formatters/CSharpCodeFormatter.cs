@@ -7,6 +7,7 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates.Formatters
     /// </summary>
     public class CSharpCodeFormatter : CodeFormatter
     {
+        /// <inheritdoc />
         protected override HashSet<char> InvalidCharacters => base.InvalidCharacters;
         // Extend or override invalid characters specific to C#
         // For example: '@', which might be allowed in other languages but not in C#

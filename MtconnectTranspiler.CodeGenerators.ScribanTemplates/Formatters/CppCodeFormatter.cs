@@ -8,6 +8,7 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates.Formatters
     /// </summary>
     public class CppCodeFormatter : CodeFormatter
     {
+        /// <inheritdoc />
         protected override HashSet<char> InvalidCharacters => base.InvalidCharacters;
         // You can extend or override invalid characters specific to C++ here if needed
 
