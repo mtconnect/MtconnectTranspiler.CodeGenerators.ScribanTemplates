@@ -1,11 +1,15 @@
-﻿using Scriban.Runtime;
+﻿using MtconnectTranspiler.Interpreters;
+using Scriban.Runtime;
 using System;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace MtconnectTranspiler.Sinks.ScribanTemplates
+namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 {
+    /// <summary>
+    /// Collection of helper methods that can be used by the Scriban template engine.
+    /// </summary>
     public partial class ScribanHelperMethods : ScriptObject
     {
         /// <summary>
@@ -16,7 +20,7 @@ namespace MtconnectTranspiler.Sinks.ScribanTemplates
         /// <summary>
         /// The default <see cref="MarkdownInterpreter"/> used to convert markdown from XMI comments. Default is the <see cref="VisualStudioSummaryInterpreter"/>.
         /// </summary>
-        public static MarkdownInterpreter DefaultMarkdownInterpreter { get; set; } = new VisualStudioSummaryInterpreter();
+        public static MarkdownInterpreter DefaultMarkdownInterpreter { get; set; } = new PlainTextInterpreter();
 
         /// <summary>
         /// Converts Markdown formatted text using the <see cref="DefaultMarkdownInterpreter"/>.
@@ -37,10 +41,12 @@ namespace MtconnectTranspiler.Sinks.ScribanTemplates
             .GetInvalidFileNameChars()
             .Concat(new char[] { ' ' })
             .ToArray();
+
         /// <summary>
         /// Regular expression to replace the <see cref="InvalidCharacters"/>
         /// </summary>
         public static Regex ReplaceInvalidChars { get; set; } = new Regex(@"\" + String.Join(@"|\", InvalidCharacters), RegexOptions.Compiled);
+
         /// <summary>
         /// Replaces invalid filename characters with the <paramref name="replaceBy"/> character
         /// </summary>

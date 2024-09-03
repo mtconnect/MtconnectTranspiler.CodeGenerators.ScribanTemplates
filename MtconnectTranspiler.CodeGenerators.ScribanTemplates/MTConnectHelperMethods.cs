@@ -3,7 +3,7 @@ using MtconnectTranspiler.Xmi.Profile;
 using Scriban.Runtime;
 using System.Collections.Generic;
 
-namespace MtconnectTranspiler.Sinks.ScribanTemplates
+namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
 {
     /// <summary>
     /// Helper methods related to processing MTConnect references.
@@ -31,18 +31,21 @@ namespace MtconnectTranspiler.Sinks.ScribanTemplates
         /// </summary>
         public static Dictionary<string, string> VersionEnumLookup { get; set; } = new Dictionary<string, string>()
         {
-            { "1.0", "MtconnectVersions.V_1_0_1" },
-            { "1.1", "MtconnectVersions.V_1_1_0" },
-            { "1.2", "MtconnectVersions.V_1_2_0" },
-            { "1.3", "MtconnectVersions.V_1_3_0" },
-            { "1.4", "MtconnectVersions.V_1_4_0" },
-            { "1.5", "MtconnectVersions.V_1_5_0" },
-            { "1.6", "MtconnectVersions.V_1_6_0" },
-            { "1.7", "MtconnectVersions.V_1_7_0" },
-            { "1.8", "MtconnectVersions.V_1_8_0" },
-            { "2.0", "MtconnectVersions.V_2_0_0" },
-            { "2.1", "MtconnectVersions.V_2_1_0" },
-            { "2.2", "MtconnectVersions.V_2_2_0" }
+            { "1.0", "1.0.1" },
+            { "1.1", "1.1.0" },
+            { "1.2", "1.2.0" },
+            { "1.3", "1.3.0" },
+            { "1.4", "1.4.0" },
+            { "1.5", "1.5.0" },
+            { "1.6", "1.6.0" },
+            { "1.7", "1.7.0" },
+            { "1.8", "1.8.0" },
+            { "2.0", "2.0.0" },
+            { "2.1", "2.1.0" },
+            { "2.2", "2.2.0" },
+            { "2.3", "2.3.0" },
+            { "2.4", "2.4.0" },
+            { "2.5", "2.5.0" }
         };
         /// <summary>
         /// References <see cref="VersionEnumLookup"/> to lookup an alternative to the version number referred to within the <see cref="XmiDocument"/>.
