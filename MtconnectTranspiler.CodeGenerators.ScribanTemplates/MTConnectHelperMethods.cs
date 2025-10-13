@@ -25,10 +25,10 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
         /// <returns>First find of the <see cref="Deprecated"/></returns>
         public static Deprecated LookupDeprecated(XmiDocument model, string id) => MtconnectTranspiler.Contracts.MTConnectHelper.LookupDeprecated(model, id);
 
-        // TODO: Remove these references to MtconnectVersions and leave that up to MtconnectCore
         /// <summary>
         /// An overridable collection of alternative version numbers, keyed by the version numbers defined within the <see cref="XmiDocument"/>.
         /// </summary>
+        // TODO: Remove these references to MtconnectVersions and leave that up to MtconnectCore
         public static Dictionary<string, string> VersionEnumLookup { get; set; } = new Dictionary<string, string>()
         {
             { "1.0", "1.0.1" },
@@ -45,7 +45,8 @@ namespace MtconnectTranspiler.CodeGenerators.ScribanTemplates
             { "2.2", "2.2.0" },
             { "2.3", "2.3.0" },
             { "2.4", "2.4.0" },
-            { "2.5", "2.5.0" }
+            { "2.5", "2.5.0" },
+            { "2.6", "2.6.0" }
         };
         /// <summary>
         /// References <see cref="VersionEnumLookup"/> to lookup an alternative to the version number referred to within the <see cref="XmiDocument"/>.
