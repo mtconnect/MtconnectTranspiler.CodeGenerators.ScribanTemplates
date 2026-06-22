@@ -1,16 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
 	  <TargetFramework>netstandard2.0</TargetFramework>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	  <Title>MTConnect Transpiler Code Generator for Scriban Templates</Title>
-	  <Version>2.6.0.0</Version>
+	  <Version>2.7.0.0</Version>
 	  <Authors>mtconnect, tbm0115</Authors>
 	  <Company>MTConnect Institute; TAMS;</Company>
 	  <Description>An implementation of `ITranspilerSink` from the `MtconnectTranspiler` library. This libary makes it possible to transpile the MTConnect Standard SysML model into other formats with the help of Scriban templates.</Description>
 	  <RepositoryType>git</RepositoryType>
 	  <PackageTags>MTConnect;Transpiler;CI;Scriban;</PackageTags>
 	  <PackageProjectUrl>https://github.com/mtconnect/MtconnectTranspiler.CodeGenerators.ScribanTemplates</PackageProjectUrl>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <RepositoryUrl>https://github.com/mtconnect/MtconnectTranspiler.CodeGenerators.ScribanTemplates</RepositoryUrl>
 	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
 	  <IncludeSymbols>True</IncludeSymbols>
@@ -18,12 +19,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Update="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CaseExtensions" Version="1.1.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.9" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.9" />
-    <PackageReference Include="MtconnectTranspiler" Version="2.6.1" />
-    <PackageReference Include="Scriban" Version="6.4.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.9" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.9" />
+    <PackageReference Include="MtconnectTranspiler" Version="2.7.0" />
+    <PackageReference Include="Scriban" Version="7.2.4" />
   </ItemGroup>
 
 </Project>
