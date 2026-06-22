@@ -1,55 +1,110 @@
-[![Publish to NuGet.org](https://github.com/mtconnect/MtconnectTranspiler.Sinks.ScribanTemplates/actions/workflows/nuget-packages.yml/badge.svg)](https://github.com/mtconnect/MtconnectTranspiler.Sinks.ScribanTemplates/actions/workflows/nuget-packages.yml)
+[![Publish to NuGet.org](https://github.com/mtconnect/MtconnectTranspiler.CodeGenerators.ScribanTemplates/actions/workflows/nuget-packages.yml/badge.svg)](https://github.com/mtconnect/MtconnectTranspiler.CodeGenerators.ScribanTemplates/actions/workflows/nuget-packages.yml)
+[![NuGet](https://img.shields.io/nuget/v/MtconnectTranspiler.CodeGenerators.ScribanTemplates.svg)](https://www.nuget.org/packages/MtconnectTranspiler.CodeGenerators.ScribanTemplates/)
 
-# MtconnectTranspiler.Sinks.ScribanTemplates
+# MtconnectTranspiler.CodeGenerators.ScribanTemplates
 
-Welcome to the `MtconnectTranspiler.Sinks.ScribanTemplates` repository, an abstract sink implementation designed to facilitate file generation using the MtconnectTranspiler framework and the Scriban templating engine. This library serves as a foundation for developers looking to create custom `ITranspilerSink` implementations, leveraging the powerful Scriban syntax to generate files from the deserialized SysML model provided by the MtconnectTranspiler library.
+This repository contains the source for the `MtconnectTranspiler.CodeGenerators.ScribanTemplates` NuGet package. The library provides a reusable Scriban-based rendering layer for MTConnect Transpiler code generators. It helps generator projects turn MTConnect SysML/XMI-derived model objects into source files, documentation, configuration, or other text artifacts.
 
-## Overview
+The package is not a complete command-line generator by itself. It supplies the template loading, dependency injection registration, rendering context, helper functions, and formatter extension points that downstream MTConnect generator projects can build on.
 
-The MtconnectTranspiler framework enables the deserialization of SysML models into a structured, object-oriented format conducive for further processing. The `MtconnectTranspiler.Sinks.ScribanTemplates` library extends this capability by providing a template-based approach to generating output files, making it an ideal starting point for developers wishing to create custom outputs from the SysML model, such as code files, documentation, or configuration files.
+## Package Documentation
 
-Utilizing Scriban, a fast, powerful, and versatile templating engine (https://github.com/scriban/scriban), this library offers an "Abstract Sink" which developers can reference to complete the implementation of the `ITranspilerSink` interface defined in the MtconnectTranspiler project. 
+Full library usage is documented in the package README:
 
-## Key Features
+- [MtconnectTranspiler.CodeGenerators.ScribanTemplates/README.md](MtconnectTranspiler.CodeGenerators.ScribanTemplates/README.md)
 
-- **Scriban Templating**: Leverages Scriban's templating engine to transform the deserialized SysML model into various output formats.
-- **Abstract Sink Implementation**: Provides a skeletal framework that developers can extend to implement the `ITranspilerSink` interface, tailored to their specific output requirements.
-- **Example-Driven**: Illustrated through the `MtconnectTranspiler.Sinks.CSharp` repository, demonstrating a practical implementation of generating C# code.
+That README is included in the NuGet package and appears on the package page.
 
-## Getting Started
+## What This Library Provides
 
-To utilize the `MtconnectTranspiler.Sinks.ScribanTemplates` in your project, follow these steps:
+- Scriban template rendering through `IScribanTemplateGenerator`.
+- File generation for objects that implement `IFileSource`.
+- A `ScribanTemplateAttribute` for mapping model/output classes to `.scriban` templates.
+- Template loading from a filesystem `Templates` directory or embedded resources.
+- Dependency injection setup through `AddScribanServices`.
+- Built-in template helpers for case conversion, code-safe identifiers, MTConnect lookups, and MTConnect version aliases.
+- Pluggable markdown interpreters and code formatters.
+- Formatter implementations for C#, C++, ES6 JavaScript, Python, and Ruby naming conventions.
 
-1. **Prerequisites**:
-   - Familiarity with the MtconnectTranspiler framework and its capabilities.
-   - Basic understanding of Scriban's templating syntax.
+## Installation
 
-2. **Installation**:
-   - Clone this repository into your project.
-   - Ensure you have the MtconnectTranspiler library and Scriban installed and configured in your development environment.
+Install the package from NuGet.org:
 
-3. **Creating Your Custom Sink**:
-   - Extend the abstract classes provided by this library to implement your own `ITranspilerSink`.
-   - Utilize Scriban templates to define the output structure for your specific use case.
+```sh
+dotnet add package MtconnectTranspiler.CodeGenerators.ScribanTemplates
+```
 
-4. **Integration**:
-   - Integrate your custom sink with the MtconnectTranspiler framework to start generating output from SysML models.
+Or add a package reference manually:
 
-## Usage Example
+```xml
+<PackageReference Include="MtconnectTranspiler.CodeGenerators.ScribanTemplates" Version="2.7.0" />
+```
 
-This section would provide a simple example of extending the `MtconnectTranspiler.Sinks.ScribanTemplates` abstract sink to create a custom implementation. It will demonstrate how to define a Scriban template and use it to generate output files.
+The package targets `netstandard2.0` and depends on `MtconnectTranspiler`, `Scriban`, `CaseExtensions`, and Microsoft Extensions dependency injection/options packages.
 
-(Example code and instructions would go here)
+## Publishing
 
-## Contributing
+NuGet publishing is handled by [.github/workflows/nuget-packages.yml](.github/workflows/nuget-packages.yml).
 
-Contributions to the `MtconnectTranspiler.Sinks.ScribanTemplates` library are welcome! Please read our contributing guidelines for more information on how to report issues, submit pull requests, and contribute to the library's development.
+The workflow:
+
+1. Runs when a GitHub release is published or when manually started with `workflow_dispatch`.
+2. Checks out the repository on `windows-latest`.
+3. Installs the .NET SDK configured by the workflow.
+4. Builds `MtconnectTranspiler.CodeGenerators.ScribanTemplates/MtconnectTranspiler.CodeGenerators.ScribanTemplates.csproj` in `Release`.
+5. Packs the project into the `artifacts` directory.
+6. Uploads the `.nupkg` as a workflow artifact.
+7. Pushes `artifacts/*.nupkg` to `https://nuget.org/` using the `NUGET_TOKEN` repository secret.
+
+To publish an official package version, update the package metadata in the project file, merge the change, and publish a GitHub release. Use the manual workflow only when a maintainer intentionally wants to republish from the selected branch/ref.
+
+## Local Development
+
+Restore and build the solution:
+
+```sh
+dotnet restore MtconnectTranspiler.CodeGenerators.ScribanTemplates.sln
+dotnet build MtconnectTranspiler.CodeGenerators.ScribanTemplates.sln
+```
+
+Create a local NuGet package:
+
+```sh
+dotnet pack MtconnectTranspiler.CodeGenerators.ScribanTemplates/MtconnectTranspiler.CodeGenerators.ScribanTemplates.csproj -c Release -o artifacts
+```
+
+## Repository Layout
+
+```text
+.
+|-- .github/workflows/nuget-packages.yml
+|-- MtconnectTranspiler.CodeGenerators.ScribanTemplates.sln
+|-- MtconnectTranspiler.CodeGenerators.ScribanTemplates/
+|   |-- MtconnectTranspiler.CodeGenerators.ScribanTemplates.csproj
+|   |-- README.md
+|   |-- ScribanTemplateGenerator.cs
+|   |-- IncludeSharedTemplates.cs
+|   |-- ScribanServiceBuilder.cs
+|   |-- Formatters/
+|   `-- Attributes/
+|-- CONTRIBUTING.md
+|-- CODE_OF_CONDUCT.md
+|-- SECURITY.md
+`-- LICENSE.txt
+```
+
+## Contribution
+
+This repository is hosted under the MTConnect Institute organization on GitHub and is primarily maintained by the package maintainer. Contributions are welcome when they support MTConnect Transpiler code-generation workflows and keep the library broadly reusable.
+
+For contributions:
+
+1. Open an issue or discussion first for large API changes, release/process changes, or behavior that affects downstream generator packages.
+2. Keep pull requests focused and describe the generator scenario the change enables.
+3. Update `MtconnectTranspiler.CodeGenerators.ScribanTemplates/README.md` when changing public APIs, template behavior, helpers, formatters, or installation guidance.
+4. Include tests or a clear manual verification note for behavior changes.
+5. Follow the repository [Code of Conduct](CODE_OF_CONDUCT.md) and report security concerns through the process in [SECURITY.md](SECURITY.md).
 
 ## License
 
-This project is licensed under the Apache-2.0 License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- The MtconnectTranspiler project for providing the framework for deserializing SysML models.
-- The Scriban project for offering a versatile templating engine.
+This project is licensed under the Apache License 2.0. See [LICENSE.txt](LICENSE.txt) for details.
