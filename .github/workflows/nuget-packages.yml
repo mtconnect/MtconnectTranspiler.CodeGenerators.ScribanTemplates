@@ -29,10 +29,10 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
       
     - name: Build with dotnet
-      run: dotnet build "${{ env.VS_PROJECT }}\${{ env.VS_PROJECT }}.csproj" --configuration Release
+      run: dotnet build "${{ env.VS_PROJECT_FOLDER }}\${{ env.VS_PROJECT }}" --configuration Release
 
     - name: Pack NuGet package
-      run: dotnet pack "${{ env.VS_PROJECT }}\${{ env.VS_PROJECT }}.csproj" -c Release -o "NuGet_Package" --no-build
+      run: dotnet pack "${{ env.VS_PROJECT_FOLDER }}\${{ env.VS_PROJECT }}" -c Release -o "NuGet_Package" --no-build
 
     - name: Upload NuGet Artifact
       uses: actions/upload-artifact@v4
